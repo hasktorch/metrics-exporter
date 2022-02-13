@@ -3,10 +3,22 @@
 # Install from source code
 
 ```
+git clone git@github.com:hasktorch/metrics-exporter.git
+cd metrics-exporter
 nix profile install .#tensorboard
 nix profile install .#wandb
 nix profile install .#
+
+# or 
+
+git clone git@github.com:hasktorch/metrics-exporter.git
+cd metrics-exporter
+nix profile install github:metrics-exporter#tensorboard
+nix profile install github:metrics-exporter#wandb
+nix profile install github:metrics-exporter#
 ```
+
+
 
 # Usage
 
