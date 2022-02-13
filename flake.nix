@@ -38,8 +38,8 @@
               src = ./.;
               installPhase = ''
               mkdir -p $out/bin
-              cp csv-exporter.py $out/bin
-              cp torchscript-exporter.py $out/bin
+              cp src/csv-exporter.py $out/bin
+              cp src/torchscript-exporter.py $out/bin
               chmod +x $out/bin/*
               '';
             };
