@@ -1,0 +1,6 @@
+epoch,type,value
+1,Loss/train,0.1
+2,Loss/train,0.1
+3,Loss/train,0.05
+4,Loss/train,0.04
+5,Loss/train,0.03
