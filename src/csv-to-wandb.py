@@ -11,6 +11,7 @@ def get_args_parser(add_help=True):
     return parser
 
 def main(args):
+    log = pd.read_csv(args.csv_path)
     wandb.init(project=args.project)
     for i, v in log.iterrows():
         wandb.log({'epoch': v["epoch"], v["type"]: float(v["value"])})
