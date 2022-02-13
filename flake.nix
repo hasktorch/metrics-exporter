@@ -37,7 +37,22 @@
               };
               format = "wheel";
               doCheck = false;
-              propagatedBuildInputs = [click shortuuid sentry-sdk requests docker-pycreds dateutil GitPython promise pyyaml psutil protobuf yaspin pathtools];
+              propagatedBuildInputs = [
+                click
+                shortuuid
+                sentry-sdk
+                requests
+                docker-pycreds
+                dateutil
+                GitPython
+                promise
+                pyyaml
+                psutil
+                protobuf
+                yaspin
+                pathtools
+                setuptools
+              ];
             };
           myPython = pkgs.python39.withPackages (ps: with ps;
             [ pytorch-bin
@@ -51,6 +66,7 @@
         rec {
           packages = flake-utils.lib.flattenTree {
             tensorboard = pkgs.python39Packages.tensorflow-tensorboard;
+            inherit wandb;
             metrics-exporter = pkgs.stdenv.mkDerivation {
               pname = "metrics-exporter";
               version = "0.1";

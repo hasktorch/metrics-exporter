@@ -3,6 +3,8 @@
 # Install from source code
 
 ```
+nix profile install .#tensorboard
+nix profile install .#wandb
 nix profile install .#
 ```
 
@@ -12,6 +14,13 @@ nix profile install .#
 
 ```
 csv-to-tensorboard.py --csv-path sample/log.csv
+```
+
+## Export a CSV file to WandB
+
+```
+wandb login
+csv-to-wandb.py --project test-project --csv-path sample/log.csv
 ```
 
 ## Export a torchscript file to tensorboard
