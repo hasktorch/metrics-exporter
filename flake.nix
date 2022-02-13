@@ -51,20 +51,19 @@
         rec {
           packages = flake-utils.lib.flattenTree {
             tensorboard = pkgs.python39Packages.tensorflow-tensorboard;
-            tensorboard-exporter = pkgs.stdenv.mkDerivation {
-              pname = "tensorboard-exporter";
+            metrics-exporter = pkgs.stdenv.mkDerivation {
+              pname = "metrics-exporter";
               version = "0.1";
               buildInputs = [myPython];
               src = ./.;
               installPhase = ''
               mkdir -p $out/bin
-              cp src/csv-exporter.py $out/bin
-              cp src/torchscript-exporter.py $out/bin
+              cp src/*.py $out/bin
               chmod +x $out/bin/*
               '';
             };
           };
-          defaultPackage = packages.tensorboard-exporter;
+          defaultPackage = packages.metrics-exporter;
           devShell = pkgs.mkShell {
             packages = with pkgs; [ myPython ];
             shellHook = ''

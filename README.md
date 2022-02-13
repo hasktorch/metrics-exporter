@@ -1,4 +1,4 @@
-# Tensorboard exporter
+# Metrics Exporter
 
 # Install from source code
 
@@ -11,12 +11,12 @@ nix profile install .#
 ## Export a CSV file to tensorboard
 
 ```
-csv-exporter.py --csv-path sample/log.csv
+csv-to-tensorboard.py --csv-path sample/log.csv
 ```
 
 ## Export a torchscript file to tensorboard
 
 ```
-torchscript-exporter.py --torchscript sample/yolov5s.torchscript.pt --input-shape '[3,640,480]'
+torchscript-to-tensorboard.py --torchscript sample/yolov5s.torchscript.pt --input-shape '[3,640,480]'
 ```
 
