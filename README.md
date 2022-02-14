@@ -41,3 +41,8 @@ csv-to-wandb.py --project test-project --csv-path sample/log.csv
 torchscript-to-tensorboard.py --torchscript sample/yolov5s.torchscript.pt --input-shape '[3,640,480]'
 ```
 
+## Export a metric to tensorboard
+
+```
+metric-to-tensorboard.py --logdir runs/test --epoch 4 --type loss/train --value 0.001
+```

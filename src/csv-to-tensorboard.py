@@ -6,11 +6,12 @@ from torch.utils.tensorboard import SummaryWriter
 def get_args_parser(add_help=True):
     import argparse
     parser = argparse.ArgumentParser(description='Export CSV to Tensorboard', add_help=add_help)
+    parser.add_argument('--logdir', default=None, help='Save directory location. Default is runs/**CURRENT_DATETIME_HOSTNAME**,')
     parser.add_argument('--csv-path', default=None, help='a log file of CSV format')
     return parser
 
 def main(args):
-    writer = SummaryWriter()
+    writer = SummaryWriter(args.logdir)
     log = pd.read_csv(args.csv_path)
     
     for i, v in log.iterrows():

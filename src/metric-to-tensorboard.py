@@ -2,20 +2,20 @@
 
 import pandas as pd
 from torch.utils.tensorboard import SummaryWriter
-import torch
 
 def get_args_parser(add_help=True):
     import argparse
-    parser = argparse.ArgumentParser(description='Export TorchScript to Tensorboard', add_help=add_help)
+    parser = argparse.ArgumentParser(description='Export a metric to Tensorboard', add_help=add_help)
     parser.add_argument('--logdir', default=None, help='Save directory location. Default is runs/**CURRENT_DATETIME_HOSTNAME**,')
-    parser.add_argument('--torchscript', default=None, help='a model file of TorchScript')
-    parser.add_argument('--input-shape', default=None, help='shape of input-tensor for a model')
+    parser.add_argument('--epoch', default=None, help='Current epoch')
+    parser.add_argument('--type', default=None, help='Metric type')
+    parser.add_argument('--value', default=None, help='Metric value')
+    parser.add_argument('otherthings', nargs='*')
     return parser
 
 def main(args):
     writer = SummaryWriter(args.logdir)
-    model = torch.jit.load(args.torchscript)
-    writer.add_graph(model,eval("torch.zeros("+ args.input_shape + ")"))
+    writer.add_scalar(args.type, float(args.value), args.epoch)
     writer.flush()
 
 if __name__ == "__main__":
