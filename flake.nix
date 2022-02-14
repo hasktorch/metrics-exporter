@@ -127,6 +127,7 @@
                 requests-toolbelt
                 everett
                 configobj
+                setuptools
               ];
             };
           myPython = pkgs.python39.withPackages (ps: with ps;
@@ -144,6 +145,7 @@
             inherit flamegraph;
             tensorboard = pkgs.python39Packages.tensorflow-tensorboard;
             inherit wandb;
+            inherit comet-ml;
             metrics-exporter = pkgs.stdenv.mkDerivation {
               pname = "metrics-exporter";
               version = "0.1";
