@@ -8,11 +8,27 @@
     bash-prompt = "\[nix-develop(tensorboard-exporter)\]$ ";
   };
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
+    flamegraph-src = {
+      url = "github:brendangregg/FlameGraph";
+      flake = false;
+    };
+  };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, flamegraph-src }:
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
+          flamegraph = pkgs.stdenv.mkDerivation {
+            pname = "framegraph";
+            version = "0.1";
+            buildInputs = [pkgs.perl];
+            src = flamegraph-src;
+            installPhase = ''
+              mkdir -p $out/bin
+              cp *.pl $out/bin/
+            '';
+          };
           docker-pycreds = with pkgs.python3Packages;
             buildPythonPackage rec {
               pname = "docker-pycreds";
@@ -54,17 +70,78 @@
                 setuptools
               ];
             };
+          nvidia-ml-py3 =
+            let pname = "nvidia-ml-py3";
+                version = "7.352.0";
+            in with pkgs.python3Packages;
+              buildPythonPackage rec {
+                inherit pname;
+                inherit version;
+                src = fetchPypi {
+                  inherit pname;
+                  inherit version;
+                  hash = "sha256-OQ8CkZ7p1z/mOpjHMQEGGms3+mlKeTq/VmczIPH1Enc=";
+                };
+                format = "setuptools";
+                doCheck = false;
+                propagatedBuildInputs = [
+                ];
+              };
+          everett =
+            let pname = "everett";
+                version = "3.0.0";
+            in with pkgs.python3Packages;
+              buildPythonPackage rec {
+                inherit pname;
+                inherit version;
+                src = fetchPypi {
+                  inherit pname;
+                  inherit version;
+                  hash = "sha256-gM5ZIWjOUGQ3Eezv8+yU/e7HVfIo3nRvILG/yU6iBoI=";
+                };
+                format = "setuptools";
+                doCheck = false;
+                propagatedBuildInputs = [
+                ];
+              };
+          comet-ml = with pkgs.python3Packages;
+            buildPythonPackage rec {
+              pname = "comet-ml";
+              version = "3.26.0";
+              src = builtins.fetchurl {
+                name = "comet_ml-3.26.0-py2.py3-none-any.whl";
+                url = "https://files.pythonhosted.org/packages/5f/02/3106fa0bd37d0cd51b7651d8d34d2f91b8bfb3e4ee8ef2d6862865bbfa3c/comet_ml-3.26.0-py2.py3-none-any.whl";
+                sha256 = "1sh226prngvzb6d2yfivhzf4cpm94v1fkvs6kki6izifzvxdlr5z";
+              };
+              format = "wheel";
+              doCheck = false;
+              propagatedBuildInputs = [
+                wurlitzer
+                wrapt
+                websocket-client
+                nvidia-ml-py3
+                semantic-version
+                dulwich
+                requests
+                jsonschema
+                requests-toolbelt
+                everett
+                configobj
+              ];
+            };
           myPython = pkgs.python39.withPackages (ps: with ps;
             [ pytorch-bin
               tensorflow-tensorboard
               numpy
               pandas
               wandb
+              comet-ml
             ]
           );
       in
         rec {
           packages = flake-utils.lib.flattenTree {
+            inherit flamegraph;
             tensorboard = pkgs.python39Packages.tensorflow-tensorboard;
             inherit wandb;
             metrics-exporter = pkgs.stdenv.mkDerivation {
